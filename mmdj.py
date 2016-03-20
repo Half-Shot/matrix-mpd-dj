@@ -61,6 +61,7 @@ def parse_command(cmd,event,cmd_regular):
         else:
             room.send_text("Your request has begun playing")
         if client.current() == '':
+            sleep(0.5)# Allow it to breathe
             mpc.play()
     elif "stream url" in cmd:
         room.send_text(MPD_STREAMURL)
