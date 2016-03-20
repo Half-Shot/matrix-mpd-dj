@@ -4,7 +4,7 @@ YT_OUTPUTDIR="/var/lib/mpd/music/"
 def download_youtube(url):
     ydl_opts = {
     'format': 'bestaudio/best',
-    'outtmpl': YT_OUTPUTDIR+'%(id)s.tmp',
+    'outtmpl': YT_OUTPUTDIR+'%(title)s.tmp',
     'add-metadata':True,
     'postprocessors': [{
             'key': 'FFmpegExtractAudio',

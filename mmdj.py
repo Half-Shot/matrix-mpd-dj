@@ -36,7 +36,9 @@ def parse_command(cmd,event,cmd_regular):
     elif parts[0] == "next":
         mpc.next()
     elif parts[0] == "current":
-        room.send_text(mpc.current())
+        fname = mpc.current()
+        fname = fname.replace("_"," ").replace(".ogg","")
+        room.send_text(fname)
     elif parts[0] == "update":
         mpc.update()
     elif "youtube.com/" in parts[0]:
