@@ -21,4 +21,4 @@ def download_youtube(url):
         #meta = OggVorbis(path)
         #meta.tags["TITLE"] = data["title"];
         #meta.save()
-        return path.replace(".tmp",".ogg").split('/')[-1:][0]
+        return data["title"] + ".ogg"
