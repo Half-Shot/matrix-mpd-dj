@@ -21,7 +21,7 @@ class MPCClient:
         else:
             return call(c+args)
 
-    def __runtcp(self,cmd,args):
+    def __runtcp(self,cmd,output=False,args):
         BUFFER = 512
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
