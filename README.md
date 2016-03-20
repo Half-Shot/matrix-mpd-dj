@@ -1,6 +1,15 @@
 # matrix-mpd-dj
 A matrix bot for controlling a mpd music stream
 
+Setup
+-----
+You need:
+- A working MPD Setup
+- MPC installed
+- A http stream
+- A folder that this script can write and read to for music files.
+- Auto update turned on in mpd
+
 Commands
 --------
 The current command selection is listed below:
