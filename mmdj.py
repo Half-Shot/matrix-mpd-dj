@@ -20,8 +20,10 @@ def on_cmd(event):
     if event['type'] == "m.room.message" and event['content']['msgtype'] == "m.text":
         if event['age'] < 300:
             body = event['content']['body'].lower()
-            if body.startswith('mpddj:'):
+            if body.startswith('mpddj:') or body.startswith('!mpddj'):
                 parse_command(body[6:],event,event['content']['body'][6:])
+            elif body.startswith('MPD DJ:'):
+                parse_command(body[7:],event,event['content']['body'][7:])
 
 def parse_command(cmd,event,cmd_regular):
     cmd = cmd.strip()
@@ -29,6 +31,8 @@ def parse_command(cmd,event,cmd_regular):
     room = rooms[event['room_id']];
     if parts[0] == "shuffle":
         mpc.shuffle()
+    elif parts[0] == "prev":
+        mpc.next()
     elif parts[0] == "next":
         mpc.next()
     elif parts[0] == "current":
