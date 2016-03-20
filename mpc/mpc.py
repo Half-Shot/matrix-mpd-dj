@@ -132,6 +132,12 @@ class MPCClient:
     def toggle(self):
         return self.__runcmd("toggle")
 
+    def add(self,file):
+        return self.__runcmd("add",False,[file])
+
+    def insert(self,file):
+        return self.__runcmd("insert",False,[file])
+
     def update(self,wait=False,path=None):
         args = []
 
