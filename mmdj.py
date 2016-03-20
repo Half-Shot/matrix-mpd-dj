@@ -3,7 +3,7 @@
 from matrix_client.client import MatrixClient
 from mpc.mpc import MPCClient
 from os.path import expanduser
-from time import time
+from time import time, sleep
 from djimporter import download_youtube
 
 # Error Codes:
@@ -95,4 +95,5 @@ for sroom in MTX_ROOMS:
 client.start_listener_thread()
 
 while True:
+    sleep(0.1)
     pass
