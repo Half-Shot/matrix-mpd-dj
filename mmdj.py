@@ -44,7 +44,7 @@ def parse_command(cmd,event,cmd_regular):
     elif parts[0] == "update":
         mpc.update()
     elif parts[0] == "help":
-
+        room.send_text("Commands are: play,prev,next,current,help,[youtube url],stream url")
     elif "youtube.com/" in parts[0]:
         try:
             url = cmd_regular.strip().split(" ")[0]
