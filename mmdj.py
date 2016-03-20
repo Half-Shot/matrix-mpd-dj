@@ -51,6 +51,8 @@ def parse_command(cmd,event,cmd_regular):
             return;
         mpc.update(True)
         mpc.add(f)
+        pos = len(mpc.playlist().split('\n'))-1
+        room.send_text("Your request has been queued. It currently at position",pos)
         if client.current() == '':
             mpc.play()
     elif "stream url" in cmd:
