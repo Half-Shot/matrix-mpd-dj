@@ -4,6 +4,8 @@ from matrix_client.client import MatrixClient
 from mpc.mpc import MPCClient
 from os.path import expanduser
 from time import time
+from djimporter import download_youtube
+
 # Error Codes:
 # 1 - Unknown problem has occured
 # 2 - Could not find the server.
@@ -19,20 +21,29 @@ def on_cmd(event):
         if event['age'] < 300:
             body = event['content']['body'].lower()
             if body.startswith('mpddj:'):
-                parse_command(body[6:],event)
+                parse_command(body[6:],event,event['content']['body'][6:])
 
-def parse_command(cmd,event):
+def parse_command(cmd,event,cmd_regular):
     cmd = cmd.strip()
     parts = cmd.split(" ")
     room = rooms[event['room_id']];
     if parts[0] == "shuffle":
         mpc.shuffle()
-    if parts[0] == "current":
+    elif parts[0] == "current":
         room.send_text(mpc.current())
+    elif "youtube.com/" in parts[0]:
+        try:
+            url = cmd_regular.strip().split(" ")[0]
+            print(url)
+            f = download_youtube(url)
+        except Exception as e:
+            print(e)
+            room.send_text("Couldn't download the file :(")
+            return;
+        mpc.update(True,f)
+        mpc.insert(f)
     elif "stream url" in cmd:
         room.send_text(MPD_STREAMURL)
-
-
 
 MPD_HOST = "localhost"
 

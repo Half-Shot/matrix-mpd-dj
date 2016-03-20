@@ -132,13 +132,16 @@ class MPCClient:
     def toggle(self):
         return self.__runcmd("toggle")
 
-    def update(self,path):
-        if on != None:
-            return self.__runcmd("update",False,[path])
-        else:
-            return self.__runcmd("update",False)
+    def update(self,wait=False,path=None):
+        args = []
+
+        if wait:
+            args.append("--wait")
+
+        if path != None:
+            args.append(path)
+
+        return self.__runcmd("update",False,args)
 
     def version(self):
         return self.__runcmd("version")
-
-    
