@@ -95,7 +95,7 @@ class CmdListener:
                 room.send_text("Your request has been queued. It currently at position",pos)
             else:
                 room.send_text("Your request has begun playing")
-            if mpc.current() == '':
+            if self.mpc.current() == '':
                 sleep(0.5)# Allow it to breathe
                 self.mpc.play()
         elif "stream url" in cmd:
