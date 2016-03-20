@@ -88,7 +88,8 @@ class CmdListener:
                 print(e)
                 room.send_text("Couldn't download the file :(")
                 return;
-            sleep(3)
+            print(f)
+            self.mpc.update(True)
             self.mpc.add(f)
             pos = len(self.mpc.playlist().split('\n'))-1
             if pos > 1:
