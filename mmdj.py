@@ -29,8 +29,12 @@ def parse_command(cmd,event,cmd_regular):
     room = rooms[event['room_id']];
     if parts[0] == "shuffle":
         mpc.shuffle()
+    elif parts[0] == "next":
+        mpc.next()
     elif parts[0] == "current":
         room.send_text(mpc.current())
+    elif parts[0] == "update":
+        mpc.update()
     elif "youtube.com/" in parts[0]:
         try:
             url = cmd_regular.strip().split(" ")[0]
@@ -40,18 +44,18 @@ def parse_command(cmd,event,cmd_regular):
             print(e)
             room.send_text("Couldn't download the file :(")
             return;
-        mpc.update(True,f)
-        mpc.insert(f)
+        mpc.update(True)
+        mpc.add(f)
     elif "stream url" in cmd:
         room.send_text(MPD_STREAMURL)
 
 MPD_HOST = "localhost"
 
-f = open(expanduser("~/.config/mpd.pwd"))
-MPD_HOST = f.read().strip() + MPD_HOST
-f.close()
+#f = open(expanduser("~/.config/mpd.pwd"))
+#MPD_HOST = f.read().strip() + MPD_HOST
+#f.close()
 
-MPD_STREAMURL = "http://half-shot.uk/mpd.ogg"
+MPD_STREAMURL = "http://half-shot.uk:8000/mpd.ogg"
 MTX_HOST = "https://souppenguin.com:8448"
 MTX_USERNAME = "@mpddj:souppenguin.com"
 
@@ -59,7 +63,7 @@ f = open(expanduser("~/.config/mpddj.pwd"))
 MTX_PASSWORD = f.read().strip()
 f.close()
 
-MTX_ROOMS = ["#devtest:souppenguin.com"]
+MTX_ROOMS = ["#devtest:souppenguin.com","#offtopic:matrix.org"]
 rooms = {}
 
 mpc = MPCClient(MPD_HOST)

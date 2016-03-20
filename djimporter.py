@@ -1,10 +1,10 @@
 #from  mutagen.oggvorbis import OggVorbis
 import youtube_dl
-YT_OUTPUTDIR="/tmp/"
+YT_OUTPUTDIR="/var/lib/mpd/music/"
 def download_youtube(url):
     ydl_opts = {
     'format': 'bestaudio/best',
-    'outtmpl': YT_OUTPUTDIR+'%(id)s.ogg',
+    'outtmpl': YT_OUTPUTDIR+'%(id)s.tmp',
     'add-metadata':True,
     'postprocessors': [{
             'key': 'FFmpegExtractAudio',
@@ -21,4 +21,4 @@ def download_youtube(url):
         #meta = OggVorbis(path)
         #meta.tags["TITLE"] = data["title"];
         #meta.save()
-        return path
+        return path.replace(".tmp",".ogg").split('/')[-1:][0]
