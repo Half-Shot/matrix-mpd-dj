@@ -1,5 +1,6 @@
 from subprocess import call, check_output
 import shlex
+import socket
 #TODO: Implement the rest
 
 def onoff(val):
@@ -20,6 +21,24 @@ class MPCClient:
         else:
             return call(c+args)
 
+    def __runtcp(self,cmd,args):
+        BUFFER = 512
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            s.connect((self.host,int(self.port)))
+        except:
+            raise Exception("Couldn't connect to MPD")
+
+        data = s.recv(BUFFER).decode()
+        if not data.startswith("OK MPD"):
+            s.close()
+            raise Exception("Couldn't connect to MPD")
+        msg = cmd+" "+" ".join(args)+"\n"
+        s.send(msg.encode())
+        data = s.recv(BUFFER)
+        print(data.decode())
+        s.close()
+        return True
 
     def set_crossfade(self,seconds):
         return self.__runcmd("crossfade",False,[str(seconds)])
@@ -133,12 +152,12 @@ class MPCClient:
         return self.__runcmd("toggle")
 
     def add(self,file):
-        file = shlex.quote(file)
-        return self.__runcmd("add",False,[file])
+        file = '"'+file+'"'
+        return self.__runtcp("add",False,[file])
 
     def insert(self,file):
         file = shlex.quote(file)
-        return self.__runcmd("insert",False,[file])
+        return self.__runtcp("insert",False,[file])
 
     def update(self,wait=False,path=None):
         path = shlex.quote(path)
