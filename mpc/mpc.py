@@ -1,5 +1,5 @@
 from subprocess import call, check_output
-
+import shlex
 #TODO: Implement the rest
 
 def onoff(val):
@@ -133,12 +133,15 @@ class MPCClient:
         return self.__runcmd("toggle")
 
     def add(self,file):
+        file = shlex.quote(file)
         return self.__runcmd("add",False,[file])
 
     def insert(self,file):
+        file = shlex.quote(file)
         return self.__runcmd("insert",False,[file])
 
     def update(self,wait=False,path=None):
+        path = shlex.quote(path)
         args = []
 
         if wait:
