@@ -92,7 +92,7 @@ class CmdListener:
             self.mpc.add(f)
             pos = len(self.mpc.playlist().split('\n'))-1
             if pos > 1:
-                room.send_text("Your request has been queued. It currently at position",pos)
+                room.send_text("Your request has been queued. It currently at position "+pos)
             else:
                 room.send_text("Your request has begun playing")
             if self.mpc.current() == '':
