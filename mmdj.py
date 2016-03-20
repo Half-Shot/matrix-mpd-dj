@@ -33,6 +33,8 @@ def parse_command(cmd,event,cmd_regular):
         mpc.shuffle()
     elif parts[0] == "prev":
         mpc.next()
+    elif parts[0] == "play":
+        mpc.play()
     elif parts[0] == "next":
         mpc.next()
     elif parts[0] == "current":
