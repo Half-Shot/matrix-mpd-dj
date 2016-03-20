@@ -44,7 +44,6 @@ def parse_command(cmd,event,cmd_regular):
     elif "youtube.com/" in parts[0]:
         try:
             url = cmd_regular.strip().split(" ")[0]
-            print(url)
             f = download_youtube(url)
         except Exception as e:
             print(e)
