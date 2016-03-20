@@ -51,6 +51,8 @@ def parse_command(cmd,event,cmd_regular):
             return;
         mpc.update(True)
         mpc.add(f)
+        if client.current() == '':
+            mpc.play()
     elif "stream url" in cmd:
         room.send_text(MPD_STREAMURL)
 
