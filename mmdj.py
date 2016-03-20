@@ -43,6 +43,8 @@ def parse_command(cmd,event,cmd_regular):
         room.send_text(fname)
     elif parts[0] == "update":
         mpc.update()
+    elif parts[0] == "help":
+
     elif "youtube.com/" in parts[0]:
         try:
             url = cmd_regular.strip().split(" ")[0]
@@ -54,7 +56,10 @@ def parse_command(cmd,event,cmd_regular):
         mpc.update(True)
         mpc.add(f)
         pos = len(mpc.playlist().split('\n'))-1
-        room.send_text("Your request has been queued. It currently at position",pos)
+        if pos > 1:
+            room.send_text("Your request has been queued. It currently at position",pos)
+        else:
+            room.send_text("Your request has begun playing")
         if client.current() == '':
             mpc.play()
     elif "stream url" in cmd:
