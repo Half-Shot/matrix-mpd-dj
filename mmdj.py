@@ -60,7 +60,7 @@ def parse_command(cmd,event,cmd_regular):
             room.send_text("Your request has been queued. It currently at position",pos)
         else:
             room.send_text("Your request has begun playing")
-        if client.current() == '':
+        if mpc.current() == '':
             sleep(0.5)# Allow it to breathe
             mpc.play()
     elif "stream url" in cmd:
