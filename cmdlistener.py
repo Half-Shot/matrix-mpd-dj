@@ -17,7 +17,7 @@ class CmdListener:
             self.mpc.current()
         except:
             raise Exception("An error occured while connecting to the mpd server.")
-
+            return
 
         try:
             self.client = MatrixClient(config["matrix"]["host"])
