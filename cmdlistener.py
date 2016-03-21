@@ -106,7 +106,6 @@ class CmdListener:
             while attempts < 10 and not gotfile:
                 musiclist = self.mpc.listall()
                 gotfile = f in musiclist
-                print(f,"in",musiclist,":",str(gotfile))
                 if not gotfile:
                     sleep(2)
                 attempts += 1

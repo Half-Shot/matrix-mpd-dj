@@ -4,10 +4,6 @@ from os.path import getctime, basename
 from glob import iglob
 YT_OUTPUTDIR="/var/lib/mpd/music/"
 
-def getfilename():
-    newest = min(iglob(YT_OUTPUTDIR+'*.ogg'), key=getctime)
-    return basename(newest)
-
 def download_youtube(url):
     ydl_opts = {
     'format': 'bestaudio/best',
@@ -22,10 +18,6 @@ def download_youtube(url):
     path = None
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         data = ydl.extract_info(url,False)
-        path = ydl.prepare_filename(data)
+        path = basename(ydl.prepare_filename(data).replace(".tmp",".ogg"))
         ydl.download([url])
-        #TODO: Solve commenting
-        #meta = OggVorbis(path)
-        #meta.tags["TITLE"] = data["title"];
-        #meta.save()
-        return getfilename()
+        return path
