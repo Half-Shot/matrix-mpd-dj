@@ -1,6 +1,13 @@
 #from  mutagen.oggvorbis import OggVorbis
 import youtube_dl
+from os.path import getctime, basename
+from glob import iglob
 YT_OUTPUTDIR="/var/lib/mpd/music/"
+
+def getfilename():
+    newest = min(iglob(YT_OUTPUTDIR+'*.ogg'), key=os.path.getctime)
+    return basename(newest)
+
 def download_youtube(url):
     ydl_opts = {
     'format': 'bestaudio/best',
@@ -21,4 +28,4 @@ def download_youtube(url):
         #meta = OggVorbis(path)
         #meta.tags["TITLE"] = data["title"];
         #meta.save()
-        return data["title"] + ".ogg"
+        return getfilename()
