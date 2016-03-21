@@ -5,7 +5,7 @@ from glob import iglob
 YT_OUTPUTDIR="/var/lib/mpd/music/"
 
 def getfilename():
-    newest = min(iglob(YT_OUTPUTDIR+'*.ogg'), key=os.path.getctime)
+    newest = min(iglob(YT_OUTPUTDIR+'*.ogg'), key=getctime)
     return basename(newest)
 
 def download_youtube(url):
