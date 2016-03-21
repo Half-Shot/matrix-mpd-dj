@@ -36,7 +36,6 @@ class MPCClient:
         msg = cmd+" "+" ".join(args)+"\n"
         s.send(msg.encode())
         data = s.recv(BUFFER)
-        print(data.decode())
         s.close()
         return True
 
@@ -78,9 +77,9 @@ class MPCClient:
 
     def listall(self,playlist=None):
         if playlist != None:
-            return self.__runcmd("listall",True,[playlist])
+            return self.__runcmd("listall",True,[playlist]).split("\n")
         else:
-            return self.__runcmd("listall",True)
+            return self.__runcmd("listall",True).split("\n")
 
     def load(self,playlist):
         return self.__runcmd("load",False,[playlist])
