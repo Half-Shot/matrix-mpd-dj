@@ -96,6 +96,18 @@ class CmdListener:
                 return;
             print(f)
             self.mpc.update(True)
+
+            # Do update check
+            attempts = 0
+            gotfile = False
+            while attempts < 10 and not gotfile:
+                musiclist = self.mpc.listall()
+                gotfile = f in musiclist
+                print(f,"in",musiclist,":",str(gotfile))
+                if not gotfile:
+                    sleep(2)
+                attempts += 1
+
             self.mpc.add(f)
             pos = len(self.mpc.playlist().split('\n'))-1
             if pos > 1:
