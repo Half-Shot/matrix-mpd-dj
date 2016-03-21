@@ -66,8 +66,9 @@ class CmdListener:
 
     def __on_cmd(self,event):
         if event['type'] == "m.room.message" and event['content']['msgtype'] == "m.text":
-            if event['age'] < 300:
+            if event['age'] < 5000:
                 self.cmd_queue.put(event)
+                
     def __parse_command(self,cmd,event,cmd_regular):
         cmd = cmd.strip()
         parts = cmd.split(" ")
