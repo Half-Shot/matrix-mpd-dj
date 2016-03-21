@@ -82,7 +82,7 @@ class CmdListener:
         elif parts[0] == "next":
             self.mpc.next()
         elif parts[0] == "playlist":
-            plist = self.mpc.playlist().split(["\n"])[:-1][:3]
+            plist = self.mpc.playlist().split("\n")[:-1][:3]
             room.send_text("\n".join(plist))
         elif parts[0] == "current":
             fname = self.mpc.current()
