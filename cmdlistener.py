@@ -4,14 +4,16 @@ from djimporter import download_youtube
 from matrix_client.client import MatrixClient
 from mpc.mpc import MPCClient
 from time import time, sleep
-
+from queue import Queue
 class CmdListener:
     rooms = {}
     mpc = None
     client = None
     stream_url = ""
+    cmd_queue = None
     def __init__(self,config):
         self.mpc = MPCClient(config["mpc"]["host"],config["mpc"]["port"])
+        self.cmd_queue = Queue()
 
         try:
             self.mpc.current()
@@ -48,17 +50,21 @@ class CmdListener:
     def run(self):
         self.client.start_listener_thread()
         while True:
-            sleep(0.1)
-            pass
+            event = self.cmd_queue.get()
+            if event is None:
+                continue;
+            else:
+                cmd = event['content']['body']
+                body = cmd.lower()
+                if body.startswith('mpddj:') or body.startswith('!mpddj'):
+                    self.__parse_command(body[6:],cmd[6:])
+                elif body.startswith('MPD DJ:'):
+                    self.__parse_command(body[7:],event,cmd[7:])
 
     def __on_cmd(self,event):
         if event['type'] == "m.room.message" and event['content']['msgtype'] == "m.text":
             if event['age'] < 300:
-                body = event['content']['body'].lower()
-                if body.startswith('mpddj:') or body.startswith('!mpddj'):
-                    self.__parse_command(body[6:],event,event['content']['body'][6:])
-                elif body.startswith('MPD DJ:'):
-                    self.__parse_command(body[7:],event,event['content']['body'][7:])
+                self.cmd_queue.put(event)
 
     def __parse_command(self,cmd,event,cmd_regular):
         cmd = cmd.strip()
@@ -73,7 +79,7 @@ class CmdListener:
         elif parts[0] == "next":
             self.mpc.next()
         elif parts[0] == "current":
-            fname = mpc.current()
+            fname = self.mpc.current()
             fname = fname.replace("_"," ").replace(".ogg","")
             room.send_text(fname)
         elif parts[0] == "update":
@@ -93,7 +99,7 @@ class CmdListener:
             self.mpc.add(f)
             pos = len(self.mpc.playlist().split('\n'))-1
             if pos > 1:
-                room.send_text("Your request has been queued. It currently at position "+str(pos))
+                room.send_text(f + " has been queued. It currently at position "+str(pos))
             else:
                 room.send_text("Your request has begun playing")
             if self.mpc.current() == '':
