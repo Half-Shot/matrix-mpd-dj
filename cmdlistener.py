@@ -68,7 +68,6 @@ class CmdListener:
         if event['type'] == "m.room.message" and event['content']['msgtype'] == "m.text":
             if event['age'] < 300:
                 self.cmd_queue.put(event)
-format":"org.matrix.custom.html","body":"*abcde*","formatted_body":"<em>abcde</em>"
     def __parse_command(self,cmd,event,cmd_regular):
         cmd = cmd.strip()
         parts = cmd.split(" ")
