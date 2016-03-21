@@ -112,6 +112,7 @@ class CmdListener:
             if gotfile:
                 self.mpc.add(f)
                 pos = len(self.mpc.playlist().split('\n'))-1
+                f = "*" + f.replace(".ogg","") + "*"
                 if pos > 1:
                     room.send_text(f + " has been queued. It currently at position "+str(pos))
                 else:
