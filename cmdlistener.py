@@ -57,8 +57,8 @@ class CmdListener:
                 cmd = event['content']['body']
                 body = cmd.lower()
                 if body.startswith('mpddj:') or body.startswith('!mpddj'):
-                    self.__parse_command(body[6:],cmd[6:])
-                elif body.startswith('MPD DJ:'):
+                    self.__parse_command(body[6:],event,cmd[6:])
+                elif body.startswith('mpd dj:'):
                     self.__parse_command(body[7:],event,cmd[7:])
 
     def __on_cmd(self,event):
