@@ -68,7 +68,7 @@ class CmdListener:
         if event['type'] == "m.room.message" and event['content']['msgtype'] == "m.text":
             if event['age'] < 300:
                 self.cmd_queue.put(event)
-
+format":"org.matrix.custom.html","body":"*abcde*","formatted_body":"<em>abcde</em>"
     def __parse_command(self,cmd,event,cmd_regular):
         cmd = cmd.strip()
         parts = cmd.split(" ")
@@ -83,7 +83,11 @@ class CmdListener:
             self.mpc.next()
         elif parts[0] == "playlist":
             plist = self.mpc.playlist().split("\n")[:-1][:3]
-            room.send_text("\n".join(plist).replace(".ogg",""))
+            if len(plist) > 0:
+                plist[0] = "▶ " + plist[0]
+                room.send_text("\n".join(plist).replace(".ogg",""))
+            else:
+                room.send_text("The playlist is empty")
         elif parts[0] == "current":
             fname = self.mpc.current()
             fname = fname.replace("_"," ").replace(".ogg","")
@@ -115,7 +119,7 @@ class CmdListener:
             if gotfile:
                 self.mpc.add(f)
                 pos = len(self.mpc.playlist().split('\n'))-1
-                f = "<em>" + f.replace(".ogg","") + "</em>"
+                f = f.replace(".ogg","")
                 if pos > 1:
                     room.send_text(f + " has been queued. It currently at position "+str(pos))
                 else:
