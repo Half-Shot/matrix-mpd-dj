@@ -107,15 +107,17 @@ class CmdListener:
                 if not gotfile:
                     sleep(2)
                 attempts += 1
-
-            self.mpc.add(f)
-            pos = len(self.mpc.playlist().split('\n'))-1
-            if pos > 1:
-                room.send_text(f + " has been queued. It currently at position "+str(pos))
+            if gotfile:
+                self.mpc.add(f)
+                pos = len(self.mpc.playlist().split('\n'))-1
+                if pos > 1:
+                    room.send_text(f + " has been queued. It currently at position "+str(pos))
+                else:
+                    room.send_text(f + " has begun playing")
+                if self.mpc.current() == '':
+                    sleep(0.5)# Allow it to breathe
+                    self.mpc.play()
             else:
-                room.send_text("Your request has begun playing")
-            if self.mpc.current() == '':
-                sleep(0.5)# Allow it to breathe
-                self.mpc.play()
+                room.send_text("I couldn't play the file. This is probably a bug and should be reported to Half-Shot.")
         elif "stream url" in cmd:
             room.send_text(self.stream_url)
