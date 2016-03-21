@@ -81,6 +81,9 @@ class CmdListener:
             self.mpc.play()
         elif parts[0] == "next":
             self.mpc.next()
+        elif parts[0] == "playlist":
+            plist = self.mpc.playlist().split(["\n"])[:-1][:3]
+            room.send_text("\n".join(plist))
         elif parts[0] == "current":
             fname = self.mpc.current()
             fname = fname.replace("_"," ").replace(".ogg","")
@@ -88,7 +91,7 @@ class CmdListener:
         elif parts[0] == "update":
             self.mpc.update()
         elif parts[0] == "help":
-            room.send_text("Commands are: play,prev,next,current,help,[youtube url],stream url")
+            room.send_text("Commands are: play,prev,next,current,playlist,help,[youtube url],stream url")
         elif "youtube.com/" in parts[0]:
             try:
                 url = cmd_regular.strip().split(" ")[0]
