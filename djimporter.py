@@ -11,6 +11,7 @@ __yt_callback = None
 def yt_hook(status):
     global __yt_callback
     if status['status'] == "finished":
+        print("Finished downloading video")
         fname = status['filename'].replace(".tmp",".ogg")
         attempts = 0
         while not exists(fname) and attempts < 10:
@@ -39,8 +40,8 @@ def download_youtube(url,outputdir,callback):
         'progress_hooks':[yt_hook]
         }
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+
             data = ydl.extract_info(url,False)
-            path = False
             if 'entries' not in data.keys():
                 path = basename(ydl.prepare_filename(data).replace(".tmp",".ogg"))
             status = ydl.download([url])
