@@ -14,7 +14,7 @@ class CmdListener:
     client = None
     stream_url = ""
     cmd_queue = None
-    music_dir = "/tmp/"
+    music_dir = None
     def __init__(self,config):
         self.mpc = MPCClient(config["mpc"]["host"],config["mpc"]["port"])
         music_dir = config["mpc"]["music_dir"]
