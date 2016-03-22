@@ -3,13 +3,13 @@ import youtube_dl
 from os.path import getctime, basename,exists
 from glob import iglob
 from threading import Lock
+from time import sleep
 
 yt_mutex = Lock()
 __yt_callback = None
 
 def yt_hook(status):
     global __yt_callback
-    print(__yt_callback)
     if status['status'] == "finished":
         fname = status['filename'].replace(".tmp",".ogg")
         attempts = 0
