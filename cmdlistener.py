@@ -17,7 +17,7 @@ class CmdListener:
     music_dir = None
     def __init__(self,config):
         self.mpc = MPCClient(config["mpc"]["host"],config["mpc"]["port"])
-        music_dir = config["mpc"]["music_dir"]
+        self.music_dir = config["mpc"]["music_dir"]
         self.cmd_queue = Queue()
 
         try:
