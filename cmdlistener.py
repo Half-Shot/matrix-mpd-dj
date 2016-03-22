@@ -5,7 +5,7 @@ from matrix_client.client import MatrixClient
 from mpc.mpc import MPCClient
 from time import time, sleep
 from queue import Queue
-
+import traceback
 
 
 class CmdListener:
@@ -117,6 +117,7 @@ class CmdListener:
                 status,fname = download_youtube(url,self.music_dir,self.__newfile_play)
             except Exception as e:
                 print(e)
+                print(traceback.format_exc())
                 room.send_text("Couldn't download the file :(")
                 return;
             self.mpc.update(True)
