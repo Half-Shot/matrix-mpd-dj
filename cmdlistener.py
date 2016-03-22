@@ -68,7 +68,7 @@ class CmdListener:
         if event['type'] == "m.room.message" and event['content']['msgtype'] == "m.text":
             if event['age'] < 5000:
                 self.cmd_queue.put(event)
-                
+
     def __parse_command(self,cmd,event,cmd_regular):
         cmd = cmd.strip()
         parts = cmd.split(" ")
@@ -104,7 +104,6 @@ class CmdListener:
                 print(e)
                 room.send_text("Couldn't download the file :(")
                 return;
-            print(f)
             self.mpc.update(True)
 
             # Do update check
@@ -112,18 +111,28 @@ class CmdListener:
             gotfile = False
             while attempts < 10 and not gotfile:
                 musiclist = self.mpc.listall()
-                gotfile = f in musiclist
+                gotfile = True
+                for fi in f:
+                    gotfile = gotfile && (fi in musiclist)
                 if not gotfile:
                     sleep(2)
                 attempts += 1
+
             if gotfile:
-                self.mpc.add(f)
+                for fi in f:
+                    self.mpc.add(fi)
                 pos = len(self.mpc.playlist().split('\n'))-1
-                f = f.replace(".ogg","")
-                if pos > 1:
-                    room.send_text(f + " has been queued. It currently at position "+str(pos))
+                if len(f) == 1
+                    fi = f[0].replace(".ogg","")
+                    if pos > 1:
+                        room.send_text(fi + " has been queued. It currently at position "+str(pos))
+                    else:
+                        room.send_text(fi + " has begun playing")
                 else:
-                    room.send_text(f + " has begun playing")
+                    if pos > 1:
+                        room.send_text("Your playlist has been queued. It currently at position "+str(pos))
+                    else:
+                        room.send_text("Your playlist has begun playing")
                 if self.mpc.current() == '':
                     sleep(0.5)# Allow it to breathe
                     self.mpc.play()
