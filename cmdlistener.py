@@ -84,8 +84,6 @@ class CmdListener:
         if gotfile:
             self.mpc.add(fname)
             self.mpc.play()
-        else:
-            print("Couldn't find file :/")
 
     def __parse_command(self,cmd,event,cmd_regular):
         cmd = cmd.strip()
@@ -98,7 +96,6 @@ class CmdListener:
         elif parts[0] == "play":
             self.mpc.play()
         elif parts[0] == "next":
-            if parts[1]
             self.mpc.next()
         elif parts[0] == "playlist":
             plist = self.mpc.playlist().split("\n")[:-1][:3]
@@ -116,8 +113,10 @@ class CmdListener:
         elif parts[0] == "help":
             room.send_text("Commands are: play,prev,next,current,playlist,help,[youtube url],stream url")
         elif "youtube.com/" in parts[0]:
+            pos = 1
             try:
                 url = cmd_regular.strip().split(" ")[0]
+                pos = len(self.mpc.playlist().split('\n'))-1
                 status,fname = download_youtube(url,self.music_dir,self.__newfile_play)
             except Exception as e:
                 print(e)
@@ -128,7 +127,6 @@ class CmdListener:
 
 
             if status:
-                pos = len(self.mpc.playlist().split('\n'))-1
                 if fname is not False:
                     fi = fname.replace(".ogg","")
                     if pos > 1:
