@@ -7,22 +7,20 @@ from time import sleep
 
 yt_mutex = Lock()
 __yt_callback = None
-
+__yt_lastfile = ""
 def yt_hook(status):
     global __yt_callback
+    global __yt_lastfile
     if status['status'] == "finished":
         print("Finished downloading video")
         fname = status['filename'].replace(".tmp",".ogg")
-        attempts = 0
-        while not exists(fname) and attempts < 10:
-            attempts += 1
-            sleep(0.5)
-
-        if exists(fname):
-            __yt_callback(basename(fname))
+        if exists(__yt_lastfile):
+            __yt_callback(__yt_lastfile)
+        __yt_lastfile = basename(fname)
 
 def download_youtube(url,outputdir,callback):
     global __yt_callback
+    global __yt_lastfile
     yt_mutex.acquire()
     path = False
     status = False
@@ -47,6 +45,7 @@ def download_youtube(url,outputdir,callback):
             status = ydl.download([url])
             print(status)
             status = (status == 0)
+            __yt_callback(__yt_lastfile)
     finally:
         yt_mutex.release()
     return status, path

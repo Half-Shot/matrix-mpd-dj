@@ -83,6 +83,7 @@ class CmdListener:
             attempts += 1
         if gotfile:
             self.mpc.add(fname)
+            self.mpc.play()
 
     def __parse_command(self,cmd,event,cmd_regular):
         cmd = cmd.strip()
