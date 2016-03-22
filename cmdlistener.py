@@ -71,7 +71,7 @@ class CmdListener:
             if event['age'] < 5000:
                 self.cmd_queue.put(event)
 
-    def __newfile_play(self,fname,max_attempts=5):
+    def __newfile_play(self,fname,max_attempts=25):
         # Do update check
         attempts = 0
         gotfile = False
@@ -84,6 +84,8 @@ class CmdListener:
         if gotfile:
             self.mpc.add(fname)
             self.mpc.play()
+        else:
+            print("Couldn't find file :/")
 
     def __parse_command(self,cmd,event,cmd_regular):
         cmd = cmd.strip()
