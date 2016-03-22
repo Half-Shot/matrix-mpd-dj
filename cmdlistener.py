@@ -113,7 +113,7 @@ class CmdListener:
                 musiclist = self.mpc.listall()
                 gotfile = True
                 for fi in f:
-                    gotfile = gotfile && (fi in musiclist)
+                    gotfile = gotfile and (fi in musiclist)
                 if not gotfile:
                     sleep(2)
                 attempts += 1
