@@ -4,7 +4,6 @@ from os.path import getctime, basename,exists
 from glob import iglob
 from threading import Lock
 
-YT_OUTPUTDIR="/tmp/"
 yt_mutex = Lock()
 __yt_callback = None
 
@@ -21,7 +20,7 @@ def yt_hook(status):
         if exists(fname):
             __yt_callback(basename(fname))
 
-def download_youtube(url,callback):
+def download_youtube(url,outputdir,callback):
     global __yt_callback
     yt_mutex.acquire()
     path = False
@@ -30,7 +29,7 @@ def download_youtube(url,callback):
     try:
         ydl_opts = {
         'format': 'bestaudio/best',
-        'outtmpl': YT_OUTPUTDIR+'%(title)s.tmp',
+        'outtmpl': outputdir+'%(title)s.tmp',
         'add-metadata':True,
         'postprocessors': [{
                 'key': 'FFmpegExtractAudio',

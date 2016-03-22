@@ -21,6 +21,7 @@ def default_config(path):
     config["mpc"]["host"] = "localhost"
     config["mpc"]["port"] = "6600"
     config["mpc"]["streamurl"] = "http://localhost:8000"
+    config["mpc"]["music_dir"] = "/var/lib/mpd/music"
 
     config["matrix"]["host"] = "https://localhost:8448"
     config["matrix"]["user"] = "username"
@@ -37,7 +38,7 @@ def read_config(path):
         print("Error, missing mpc section")
         return False
 
-    keys = ["host","port","streamurl"]
+    keys = ["host","port","streamurl","music_dir"]
     for key in keys:
         if key not in config["mpc"].keys():
             print("Error, missing",key,"from mpc section")

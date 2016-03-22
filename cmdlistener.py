@@ -14,8 +14,10 @@ class CmdListener:
     client = None
     stream_url = ""
     cmd_queue = None
+    music_dir = "/tmp/"
     def __init__(self,config):
         self.mpc = MPCClient(config["mpc"]["host"],config["mpc"]["port"])
+        music_dir = config["mpc"]["music_dir"]
         self.cmd_queue = Queue()
 
         try:
@@ -112,7 +114,7 @@ class CmdListener:
         elif "youtube.com/" in parts[0]:
             try:
                 url = cmd_regular.strip().split(" ")[0]
-                status,fname = download_youtube(url,self.__newfile_play)
+                status,fname = download_youtube(url,self.music_dir,self.__newfile_play)
             except Exception as e:
                 print(e)
                 room.send_text("Couldn't download the file :(")
