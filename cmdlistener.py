@@ -69,6 +69,19 @@ class CmdListener:
             if event['age'] < 5000:
                 self.cmd_queue.put(event)
 
+    def __newfile_play(fname,max_attempts=5):
+        # Do update check
+        attempts = 0
+        gotfile = False
+        while attempts < max_attempts and not gotfile:
+            musiclist = self.mpc.listall()
+            gotfile = fname in musiclist
+            if not gotfile:
+                sleep(0.5)
+            attempts += 1
+        if gotfile:
+            self.mpc.add(fname)
+
     def __parse_command(self,cmd,event,cmd_regular):
         cmd = cmd.strip()
         parts = cmd.split(" ")
@@ -99,30 +112,17 @@ class CmdListener:
         elif "youtube.com/" in parts[0]:
             try:
                 url = cmd_regular.strip().split(" ")[0]
-                f = download_youtube(url)
+                status,fname = download_youtube(url,self.__newfile_play)
             except Exception as e:
                 print(e)
                 room.send_text("Couldn't download the file :(")
                 return;
             self.mpc.update(True)
 
-            # Do update check
-            attempts = 0
-            gotfile = False
-            while attempts < 10 and not gotfile:
-                musiclist = self.mpc.listall()
-                gotfile = True
-                for fi in f:
-                    gotfile = gotfile and (fi in musiclist)
-                if not gotfile:
-                    sleep(2)
-                attempts += 1
 
-            if gotfile:
-                for fi in f:
-                    self.mpc.add(fi)
+            if status:
                 pos = len(self.mpc.playlist().split('\n'))-1
-                if len(f) == 1:
+                if fname is not False:
                     fi = f[0].replace(".ogg","")
                     if pos > 1:
                         room.send_text(fi + " has been queued. It currently at position "+str(pos))
@@ -138,5 +138,6 @@ class CmdListener:
                     self.mpc.play()
             else:
                 room.send_text("I couldn't play the file. This is probably a bug and should be reported to Half-Shot.")
+
         elif "stream url" in cmd:
             room.send_text(self.stream_url)
