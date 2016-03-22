@@ -47,6 +47,7 @@ def download_youtube(url,outputdir,callback):
             print(status)
             status = (status == 0)
             __yt_callback(__yt_lastfile)
+            __yt_lastfile = ""
     finally:
         yt_mutex.release()
     return status, path
