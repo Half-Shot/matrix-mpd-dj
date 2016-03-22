@@ -98,6 +98,7 @@ class CmdListener:
         elif parts[0] == "play":
             self.mpc.play()
         elif parts[0] == "next":
+            if parts[1]
             self.mpc.next()
         elif parts[0] == "playlist":
             plist = self.mpc.playlist().split("\n")[:-1][:3]

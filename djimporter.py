@@ -15,7 +15,8 @@ def yt_hook(status):
         print("Finished downloading video")
         fname = status['filename'].replace(".tmp",".ogg")
         print("YT Last file:",__yt_lastfile)
-        __yt_callback(__yt_lastfile)
+        if __yt_lastfile != "":
+            __yt_callback(__yt_lastfile)
         __yt_lastfile = basename(fname)
 
 def download_youtube(url,outputdir,callback):
