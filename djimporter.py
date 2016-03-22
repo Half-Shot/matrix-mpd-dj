@@ -43,8 +43,9 @@ def download_youtube(url,outputdir,callback):
             path = False
             if 'entries' not in data.keys():
                 path = basename(ydl.prepare_filename(data).replace(".tmp",".ogg"))
-
-            status = (ydl.download([url]) == 0)
+            status = ydl.download([url])
+            print(status)
+            status = (status == 0)
     finally:
         yt_mutex.release()
     return status, path
