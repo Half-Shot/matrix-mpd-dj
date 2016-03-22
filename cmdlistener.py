@@ -71,7 +71,7 @@ class CmdListener:
             if event['age'] < 5000:
                 self.cmd_queue.put(event)
 
-    def __newfile_play(fname,max_attempts=5):
+    def __newfile_play(self,fname,max_attempts=5):
         # Do update check
         attempts = 0
         gotfile = False
