@@ -4,7 +4,7 @@ from os.path import getctime, basename
 from glob import iglob
 YT_OUTPUTDIR="/var/lib/mpd/music/"
 
-def download_youtube(url,callback,callbackdata):
+def download_youtube(url):
     ydl_opts = {
     'format': 'bestaudio/best',
     'outtmpl': YT_OUTPUTDIR+'%(title)s.tmp',
@@ -13,8 +13,7 @@ def download_youtube(url,callback,callbackdata):
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'vorbis',
             'preferredquality': '192',
-        }],
-    'progress_hooks': [hook]
+        }]
     }
     path = None
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
