@@ -112,7 +112,7 @@ class CmdListener:
             self.mpc.update()
         elif parts[0] == "help":
             room.send_text("Commands are: play,prev,next,current,playlist,help,[youtube url],stream url")
-        elif "youtube.com/" in parts[0]:
+        elif "youtube.com/" in parts[0] or "soundcloud.com/" in parts[0]:
             pos = 1
             try:
                 url = cmd_regular.strip().split(" ")[0]
