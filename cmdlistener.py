@@ -129,8 +129,8 @@ class CmdListener:
             if status:
                 if fname is not False:
                     fi = fname.replace(".ogg","")
-                    if pos > 1:
-                        room.send_text(fi + " has been queued. It currently at position "+str(pos))
+                    if pos > 0:
+                        room.send_text(fi + " has been queued. It currently at position "+str(pos+1))
                     else:
                         room.send_text(fi + " has begun playing")
                 else:
