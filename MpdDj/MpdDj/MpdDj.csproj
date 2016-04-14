@@ -31,10 +31,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="INIFileParser">
+      <HintPath>..\packages\ini-parser.2.2.4\lib\net20\INIFileParser.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Configuration.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\matrix-dotnet-sdk\MatrixSDK\MatrixSDK\MatrixSDK.csproj">
+      <Project>{BF7A3DBC-EFBD-43D2-8609-CCAB4A9DFA07}</Project>
+      <Name>MatrixSDK</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

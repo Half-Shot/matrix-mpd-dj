@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MpdDj", "MpdDj\MpdDj.csproj", "{9840E711-4380-43B5-89D9-6243E051BCB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixSDK", "..\..\matrix-dotnet-sdk\MatrixSDK\MatrixSDK\MatrixSDK.csproj", "{BF7A3DBC-EFBD-43D2-8609-CCAB4A9DFA07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,5 +15,9 @@ Global
 		{9840E711-4380-43B5-89D9-6243E051BCB8}.Debug|x86.Build.0 = Debug|x86
 		{9840E711-4380-43B5-89D9-6243E051BCB8}.Release|x86.ActiveCfg = Release|x86
 		{9840E711-4380-43B5-89D9-6243E051BCB8}.Release|x86.Build.0 = Release|x86
+		{BF7A3DBC-EFBD-43D2-8609-CCAB4A9DFA07}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BF7A3DBC-EFBD-43D2-8609-CCAB4A9DFA07}.Debug|x86.Build.0 = Debug|Any CPU
+		{BF7A3DBC-EFBD-43D2-8609-CCAB4A9DFA07}.Release|x86.ActiveCfg = Release|Any CPU
+		{BF7A3DBC-EFBD-43D2-8609-CCAB4A9DFA07}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
