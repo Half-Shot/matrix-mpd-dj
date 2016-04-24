@@ -16,6 +16,7 @@ namespace MpdDj
 		const string YT_YOUTUBEDL = " -f best -o '{0}.%(ext)s' {1}";
 		static readonly Regex YoutubeRegex = new Regex("youtu(?:\\.be|be\\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)",RegexOptions.Compiled);
 		static readonly Regex YoutubePLRegex = new Regex ("^.*(youtu.be\\/|list=)([^#\\&\\?]*).*", RegexOptions.Compiled);
+		static readonly Regex SoundcloudRegex = new Regex ("^https?:\\/\\/(soundcloud.com|snd.sc)\\/(.*)$", RegexOptions.Compiled);
 
 		public static void GenericDownload(string url,string filename){
 			string[] allowedMimetypes = Configuration.Config ["file"] ["mimetypes"].Split (' ');
