@@ -82,9 +82,14 @@ namespace MpdDj
 					Console.WriteLine(res[0]);
 				}
 
-				int position = Program.MPCClient.Playlist().Length-videos.Count;
-				if(position == 0){
+				Program.MPCClient.Status();
+				if(Program.MPCClient.lastStatus.state != "playing"){
+					Console.WriteLine("Set state from " + Program.MPCClient.lastStatus.state + " to playing");
 					Program.MPCClient.Play();
+				}
+
+				int position = Program.MPCClient.Playlist().Length-(videos.Count-1);
+				if(position < 2){
 					room.SendMessage("Started playing " + videos[0][1] + " | " + Configuration.Config["mpc"]["streamurl"]);
 				}
 				else
