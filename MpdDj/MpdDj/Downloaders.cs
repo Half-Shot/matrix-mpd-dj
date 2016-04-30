@@ -12,8 +12,8 @@ namespace MpdDj
 	{
 		const string YT_BIN_WRAP = "/usr/bin/youtube-dl";
 		const string FFMPEG_BIN_WRAP = "/usr/bin/ffmpeg";
-		const string YT_FFMPEG = " -i \"{0}.{2}\" -vn -y -c:a libvorbis -b:a 192k \"{1}.ogg\"";
-		const string YT_YOUTUBEDL = " -f best -o '{0}.%(ext)s' {1}";
+		//const string YT_FFMPEG = " -i \"{0}.{2}\" -vn -y -c:a libvorbis -b:a 192k \"{1}.ogg\"";
+		const string YT_YOUTUBEDL = " -x --audio-format \"vorbis\" -f best -o '{0}.%(ext)s' {1}";
 		static readonly Regex YoutubeRegex = new Regex("youtu(?:\\.be|be\\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)",RegexOptions.Compiled);
 		static readonly Regex YoutubePLRegex = new Regex ("^.*(youtu.be\\/|list=)([^#\\&\\?]*).*", RegexOptions.Compiled);
 		static readonly Regex SoundcloudRegex = new Regex ("^https?:\\/\\/(soundcloud.com|snd.sc)\\/(.*)$", RegexOptions.Compiled);
@@ -69,52 +69,53 @@ namespace MpdDj
 		{
 			GroupCollection regg = YoutubeRegex.Match (url).Groups;
 			GroupCollection reggpl = YoutubePLRegex.Match (url).Groups;
-
 			if (regg.Count > 1 && regg[1].Value != "playlist") {
 				return regg [1].Value;
 			} else if (reggpl.Count > 2) {
 				return reggpl [2].Value;
+			} else if (SoundcloudRegex.IsMatch (url)){
+				return url;
 			} else {
 				return "";
 			}
 		}
 
-		private static void YoutubeConvert(string filename){
-			string[] extensions = new string[2]{"mp4","webm"};
-			//It doesn't tell us :/
-			string extension = null;
-			foreach (string ext in extensions) {
-				if (System.IO.File.Exists ("/tmp/" + filename + "." + ext)) {
-					extension = ext;
-				}
-			}
-
-			if(extension == null){
-				throw new Exception ("Couldn't find video file");
-			}
-
-
-			Process proc = new Process ();
-			proc.StartInfo = new ProcessStartInfo () {
-				FileName = FFMPEG_BIN_WRAP,
-				WorkingDirectory = "/tmp",
-				Arguments = String.Format(YT_FFMPEG,filename,Configuration.Config["mpc"]["music_dir"] + "/" + filename,extension),
-				UseShellExecute = false,
-				LoadUserProfile = true,
-			};
-			proc.Start ();
-			proc.WaitForExit ();
-			if(proc.ExitCode != 0){
-				throw new Exception("There was an error transcoding the video");
-			}
-			System.IO.File.Delete("/tmp/"+filename+"."+extension);
-		}
+//		private static void YoutubeConvert(string filename){
+//			string[] extensions = new string[2]{"mp4","webm"};
+//			//It doesn't tell us :/
+//			string extension = null;
+//			foreach (string ext in extensions) {
+//				if (System.IO.File.Exists ("/tmp/" + filename + "." + ext)) {
+//					extension = ext;
+//				}
+//			}
+//
+//			if(extension == null){
+//				throw new Exception ("Couldn't find video file");
+//			}
+//
+//
+//			Process proc = new Process ();
+//			proc.StartInfo = new ProcessStartInfo () {
+//				FileName = FFMPEG_BIN_WRAP,
+//				WorkingDirectory = "/tmp",
+//				Arguments = String.Format(YT_FFMPEG,filename,Configuration.Config["mpc"]["music_dir"] + "/" + filename,extension),
+//				UseShellExecute = false,
+//				LoadUserProfile = true,
+//			};
+//			proc.Start ();
+//			proc.WaitForExit ();
+//			if(proc.ExitCode != 0){
+//				throw new Exception("There was an error transcoding the video");
+//			}
+//			System.IO.File.Delete("/tmp/"+filename+"."+extension);
+//		}
 
 		public static void YoutubeDownload(string url, string filename){
 			Process proc = new Process ();
 			proc.StartInfo = new ProcessStartInfo () {
 				FileName = YT_BIN_WRAP,
-				WorkingDirectory = "/tmp",
+				WorkingDirectory = Configuration.Config["mpc"]["music_dir"] ,
 				Arguments = String.Format(YT_YOUTUBEDL,filename,url),
 				UseShellExecute = false,
 				LoadUserProfile = true,
@@ -123,9 +124,9 @@ namespace MpdDj
 			proc.Start ();
 			proc.WaitForExit ();
 			if(proc.ExitCode != 0){
-				throw new Exception("There was an error downloading the video");
+				throw new Exception("There was an error downloading/transcoding the video");
 			}
-			YoutubeConvert (filename);
+			//YoutubeConvert (filename);
 		}
 
 		public static JObject[] YoutubeGetData(string url){

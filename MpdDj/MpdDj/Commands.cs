@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using MatrixSDK.Client;
 namespace MpdDj
@@ -53,7 +54,7 @@ namespace MpdDj
 
 		}
 			
-		[BotCmd("","http://","https://","youtube.com","youtu.be")]
+		[BotCmd("","http://","https://","youtube.com","youtu.be","soundcloud.com")]
 		public static void DownloadTrack(string cmd, string sender, MatrixRoom room)
 		{
 			try
@@ -72,24 +73,19 @@ namespace MpdDj
 					return;
 				}
 
-				Console.WriteLine("Update starting");
 				Program.MPCClient.RequestLibraryUpdate();
 				//Program.MPCClient.Idle("update");//Wait for it to start
 				Program.MPCClient.Idle("update");//Wait for it to finish
 
 				foreach(string[] res in videos){
 					Program.MPCClient.AddFile(res[0]);
-					Console.WriteLine(res[0]);
 				}
-
-				Program.MPCClient.Status();
-				if(Program.MPCClient.lastStatus.state != "playing"){
-					Console.WriteLine("Set state from " + Program.MPCClient.lastStatus.state + " to playing");
+				string[] playlist = Program.MPCClient.Playlist();
+				//Console.WriteLine(string.Join("\n",playlist));
+				int position = playlist.Length-(videos.Count-1);
+				//ffConsole.WriteLine(position);
+				if(position == 1){
 					Program.MPCClient.Play();
-				}
-
-				int position = Program.MPCClient.Playlist().Length-(videos.Count-1);
-				if(position < 2){
 					room.SendMessage("Started playing " + videos[0][1] + " | " + Configuration.Config["mpc"]["streamurl"]);
 				}
 				else
@@ -100,7 +96,7 @@ namespace MpdDj
 			}
 			catch(Exception e){
 				room.SendMessage ("There was an issue with that request, "+sender+": " + e.Message);
-				Console.WriteLine (e);
+				Console.Error.WriteLine (e);
 			}
 		}
 
@@ -113,12 +109,12 @@ namespace MpdDj
 			string filename = Convert.ToBase64String(Encoding.UTF8.GetBytes(info.Name))+info.Extension;
 			Downloaders.GenericDownload (cmd, filename);
 			return new string[2] {filename, uri.Segments.Last ()};
-
 		}
 
 		public static List<string[]> DownloadYoutube(string cmd, string sender, MatrixRoom room){
 			JObject[] videos = Downloaders.YoutubeGetData (cmd);
 			List<string[]> output = new List<string[]>(videos.Length);
+			List<Task> tasks = new List<Task> ();
 			foreach(JObject data in videos){
 				//Check Length
 				int seconds = data["duration"].ToObject<int>();
@@ -127,9 +123,12 @@ namespace MpdDj
 					throw new Exception("Video exceeds duration limit of " + Math.Round(max / 60f,1) + " minutes");
 				}
 				string filename = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(data["fulltitle"].ToObject<string>()));
-				Downloaders.YoutubeDownload(data["id"].ToObject<string>(),filename);
+				Task t = new Task( () => {Downloaders.YoutubeDownload(data["webpage_url"].ToObject<string>(),filename);});
+				t.Start ();
+				tasks.Add(t);
 				output.Add(new string[2]{filename + ".ogg",data["title"].ToObject<string>()});
 			}
+			System.Threading.Tasks.Task.WaitAll (tasks.ToArray(),TimeSpan.FromSeconds(20*videos.Length));
 			return output;
 		}
 
