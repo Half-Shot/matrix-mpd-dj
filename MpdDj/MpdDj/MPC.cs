@@ -147,7 +147,7 @@ namespace MpdDj
 		}
 
 		public string[] Playlist(){
-			string playlist = Send ("playlist");
+			string playlist = Send ("playlist",true);
 			List<string> newsongs = new List<string> ();
 			foreach (string song in playlist.Split ('\n')) {
 				int indexof = song.IndexOf (' ');
@@ -159,13 +159,14 @@ namespace MpdDj
 		}
 
 		public void Status(){
-			string sstatus = Send ("status");
+			string sstatus = Send ("status",true);
+
 			MPCStatus status = FillStruct<MPCStatus> (sstatus);
 			lastStatus = status;
 		}
 
 		public MPCCurrentSong CurrentSong(){
-			string result = Send("currentsong");
+			string result = Send("currentsong",true);
 			MPCCurrentSong song = FillStruct<MPCCurrentSong>(result);
 			return song;
 		}
@@ -184,8 +185,6 @@ namespace MpdDj
 			return foo != null ? foo.State : TcpState.Unknown;
 		}
 	}
-
-
 }
 
 

@@ -12,6 +12,7 @@ namespace MpdDj
 		public static MatrixClient Client;
 		public static MPC MPCClient;
 		public static Dictionary<BotCmd,MethodInfo> Cmds = new Dictionary<BotCmd, MethodInfo>();
+		public static MethodInfo fallback = null;
 		public static void Main (string[] args)
 		{
 			Console.WriteLine ("Reading INI File");
@@ -60,6 +61,12 @@ namespace MpdDj
 				if (cmd != null) {
 					Cmds.Add (cmd, method);
 				}
+				if(method.GetCustomAttribute<BotFallback>() != null){
+					if(fallback != null){
+						Console.WriteLine("WARN: You have more than one fallback command set, overwriting previous");
+					}
+					fallback = method;
+				}
 			}
 
 		}
@@ -88,7 +95,10 @@ namespace MpdDj
 					task.Start ();	
 				}
 				catch(InvalidOperationException){
-					//Command not found
+					Task task = new Task (() => {
+						fallback.Invoke (null, new object[3]{ msg, evt.sender, room });
+					});
+					task.Start ();	
 				}
 				catch(Exception e){
 					Console.Error.WriteLine ("Problem with one of the commands");

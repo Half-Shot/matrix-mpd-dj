@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Xml;
 using Newtonsoft.Json.Linq;
 namespace MpdDj
 {
@@ -17,6 +18,30 @@ namespace MpdDj
 		static readonly Regex YoutubeRegex = new Regex("youtu(?:\\.be|be\\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)",RegexOptions.Compiled);
 		static readonly Regex YoutubePLRegex = new Regex ("^.*(youtu.be\\/|list=)([^#\\&\\?]*).*", RegexOptions.Compiled);
 		static readonly Regex SoundcloudRegex = new Regex ("^https?:\\/\\/(soundcloud.com|snd.sc)\\/(.*)$", RegexOptions.Compiled);
+
+
+		public static string GetSongNameByLyric(string lyric){
+			const string URL = "http://api.chartlyrics.com/apiv1.asmx/SearchLyricText?lyricText={0}";
+			string finalUrl = string.Format(URL,Uri.EscapeUriString(lyric));
+			string result = "";
+			using (System.Net.WebClient client = new System.Net.WebClient ()) {
+				result = client.DownloadString(finalUrl);
+			}
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(result);
+			XmlElement firstSong = (XmlElement)doc.ChildNodes[1].FirstChild;
+			if((firstSong).GetAttribute("xsi:nil") != ""){
+				return null;
+			}
+			else
+			{
+				string artist = firstSong.GetElementsByTagName("Artist")[0].InnerText;
+				string song = firstSong.GetElementsByTagName("Song")[0].InnerText;
+				return string.Format("{0} {1}",artist,song);
+			}
+
+			
+		}
 
 		public static void GenericDownload(string url,string filename){
 			string[] allowedMimetypes = Configuration.Config ["file"] ["mimetypes"].Split (' ');
@@ -62,6 +87,29 @@ namespace MpdDj
 					Console.WriteLine ("Issue downloading file", e);
 					throw new Exception ("Couldn't download file");
 				}
+			}
+		}
+
+		public static string GetYoutubeURLFromSearch(string terms){
+			const string URL_FORMAT = "https://www.googleapis.com/youtube/v3/search?part=snippet&q={0}&type=video&maxResults=1&key={1}&videoCategoryId=10";
+			string url = string.Format(URL_FORMAT,Uri.EscapeUriString(terms),Configuration.Config["youtube"]["apikey"]);
+			JObject obj;
+			using (System.Net.WebClient client = new System.Net.WebClient ()) {
+				try {
+					string data = client.DownloadString(url);
+					obj = JObject.Parse(data);
+				} catch (Exception e) {
+					Console.WriteLine ("Issue with YT API", e);
+					throw new Exception ("Couldn't do search.");
+				}
+			}	
+			JToken[] items = obj.GetValue("items").ToArray();
+			if(items.Length == 0){
+				return null;
+			}
+			else
+			{
+				return "https://youtube.com/watch?v=" + items[0].Value<JToken>("id").Value<string>("videoId");
 			}
 		}
 
